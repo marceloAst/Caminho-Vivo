@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caminho Vivo - App de Peregrinação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./Version1.0.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Splash Screen -->
+    <div id="splash-screen" class="fixed inset-0 flex items-center justify-center bg-teal-900 z-50 fade-in">
+        <div class="text-center">
+            <i class="fas fa-mountain text-yellow-400 text-6xl mb-4"></i>
+            <h1 class="text-4xl font-bold text-white">Caminho Vivo</h1>
+            <p class="text-white mt-2">Sua jornada espiritual começa aqui</p>
+        </div>
+    </div>
+
+    <!-- Main App Container (hidden initially) -->
+    <div id="app-container" class="hidden max-w-md mx-auto bg-white min-h-screen shadow-lg relative overflow-hidden">
+        <!-- Login Screen -->
+        <div id="login-screen" class="p-6 slide-up">
+            <div class="text-center mb-8">
+                <i class="fas fa-mountain text-teal-900 text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-teal-900">Bem-vindo de volta</h2>
+                <p class="text-gray-600">Entre para continuar sua jornada</p>
+            </div>
+            
+            <form class="space-y-4">
+                <div>
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center">
+                        <input id="remember-me" type="checkbox" class="h-4 w-4 text-yellow-600 focus:ring-yellow-500 border-gray-300 rounded">
+                        <label for="remember-me" class="ml-2 block text-sm text-gray-700">Lembrar-me</label>
+                    </div>
+                    
+                    <a href="#" class="text-sm text-blue-900 hover:text-blue-700">Esqueceu a senha?</a>
+                </div>
+                
+                <button type="button" onclick="showScreen('map-screen')" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                    Entrar
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Novo por aqui? 
+                    <button onclick="showScreen('register-screen')" class="font-medium text-blue-900 hover:text-blue-700">Crie uma conta</button>
+                </p>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div id="register-screen" class="hidden p-6">
+            <div class="text-center mb-8">
+                <i class="fas fa-mountain text-blue-900 text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold text-blue-900">Junte-se a nós</h2>
+                <p class="text-gray-600">Comece sua jornada espiritual</p>
+            </div>
+            
+            <form class="space-y-4">
+                <div>
+                    <label for="full-name" class="block text-sm font-medium text-gray-700">Nome completo</label>
+                    <input type="text" id="full-name" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <div>
+                    <label for="reg-email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="reg-email" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <div>
+                    <label for="reg-password" class="block text-sm font-medium text-gray-700">Senha</label>
+                    <input type="password" id="reg-password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <div>
+                    <label for="confirm-password" class="block text-sm font-medium text-gray-700">Confirme a senha</label>
+                    <input type="password" id="confirm-password" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-yellow-500 focus:border-yellow-500">
+                </div>
+                
+                <button type="button" onclick="showScreen('map-screen')" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-yellow-500 hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">
+                    Cadastrar
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p class="text-sm text-gray-600">
+                    Já tem uma conta? 
+                    <button onclick="showScreen('login-screen')" class="font-medium text-blue-900 hover:text-blue-700">Faça login</button>
+                </p>
+            </div>
+        </div>
+
+        <!-- Map Screen -->
+        <div id="map-screen" class="hidden">
+            <div class="bg-teal-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Meu Caminho</h2>
+                <div class="flex space-x-2">
+                    <button class="p-2 rounded-full bg-teal-800 hover:bg-teal-700">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                        <i class="fas fa-user"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="map-container relative">
+                <div class="absolute top-4 left-4 bg-white p-2 rounded-full shadow-md">
+                    <i class="fas fa-location-arrow text-blue-900"></i>
+                </div>
+                
+                <div class="absolute bottom-4 right-4 bg-yellow-500 p-3 rounded-full shadow-lg">
+                    <i class="fas fa-footsteps text-white text-xl"></i>
+                </div>
+                
+                <div class="absolute bottom-20 left-1/2 transform -translate-x-1/2 bg-white p-3 rounded-lg shadow-lg w-11/12">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h3 class="font-bold text-blue-900">Próxima parada</h3>
+                            <p class="text-sm text-gray-600">Santuário de Nossa Senhora</p>
+                            <p class="text-sm text-gray-600">1.2 km à frente</p>
+                        </div>
+                        <button class="bg-yellow-500 text-white p-2 rounded-full">
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-4">
+                <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                    <div class="flex justify-between items-center mb-2">
+                        <h3 class="font-bold text-blue-900">Progresso do dia</h3>
+                        <span class="text-sm bg-blue-100 text-blue-900 px-2 py-1 rounded">5.2/12 km</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 43%"></div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-4 gap-2 mb-4">
+                    <button class="bg-blue-100 text-blue-900 p-3 rounded-lg flex flex-col items-center">
+                        <i class="fas fa-utensils text-xl mb-1"></i>
+                        <span class="text-xs">Alimentação</span>
+                    </button>
+                    <button class="bg-blue-100 text-blue-900 p-3 rounded-lg flex flex-col items-center">
+                        <i class="fas fa-bed text-xl mb-1"></i>
+                        <span class="text-xs">Hospedagem</span>
+                    </button>
+                    <button class="bg-blue-100 text-blue-900 p-3 rounded-lg flex flex-col items-center">
+                        <i class="fas fa-first-aid text-xl mb-1"></i>
+                        <span class="text-xs">Saúde</span>
+                    </button>
+                    <button class="bg-blue-100 text-blue-900 p-3 rounded-lg flex flex-col items-center">
+                        <i class="fas fa-pray text-xl mb-1"></i>
+                        <span class="text-xs">Orações</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Screen -->
+        <div id="news-screen" class="hidden">
+            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Notícias e Informações</h2>
+                <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                    <i class="fas fa-bell"></i>
+                </button>
+            </div>
+            
+            <div class="p-4 space-y-4">
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all">
+                    <div class="bg-red-100 p-3 flex items-center">
+                        <i class="fas fa-exclamation-triangle text-red-500 text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-bold text-red-700">Alerta Meteorológico</h3>
+                            <p class="text-sm text-red-600">Chuva intensa prevista para amanhã</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700">Prepare-se com roupas impermeáveis e evite caminhar em áreas de risco durante o temporal.</p>
+                        <button class="mt-3 text-blue-900 text-sm font-medium">Saiba mais →</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all">
+                    <div class="bg-yellow-100 p-3 flex items-center">
+                        <i class="fas fa-tag text-yellow-600 text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-bold text-yellow-800">Promoção Especial</h3>
+                            <p class="text-sm text-yellow-700">Restaurante Caminho Real</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700">Apresente seu crachá de peregrino e ganhe 15% de desconto em refeições completas.</p>
+                        <button class="mt-3 text-blue-900 text-sm font-medium">Ver no mapa →</button>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-lg shadow-md overflow-hidden card-hover transition-all">
+                    <div class="bg-blue-100 p-3 flex items-center">
+                        <i class="fas fa-calendar-alt text-blue-600 text-xl mr-3"></i>
+                        <div>
+                            <h3 class="font-bold text-blue-800">Evento Religioso</h3>
+                            <p class="text-sm text-blue-700">Missa dos Peregrinos</p>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <p class="text-gray-700">Todos os dias às 18h na Catedral de Santiago. Participação gratuita para peregrinos.</p>
+                        <button class="mt-3 text-blue-900 text-sm font-medium">Adicionar à agenda →</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rewards Screen -->
+        <div id="rewards-screen" class="hidden">
+            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Minhas Recompensas</h2>
+                <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                    <i class="fas fa-gift"></i>
+                </button>
+            </div>
+            
+            <div class="p-4">
+                <div class="bg-white rounded-lg shadow-md p-4 mb-6 text-center">
+                    <div class="w-24 h-24 mx-auto bg-yellow-100 rounded-full flex items-center justify-center mb-3">
+                        <i class="fas fa-coins text-yellow-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue-900">1,250 pontos</h3>
+                    <p class="text-gray-600">Continue caminhando para ganhar mais!</p>
+                    
+                    <div class="mt-4">
+                        <div class="flex justify-between text-sm mb-1">
+                            <span>Nível 3</span>
+                            <span>500/1,000 pts</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 50%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3 class="font-bold text-blue-900 mb-3">Recompensas disponíveis</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white rounded-lg shadow-md p-3 text-center card-hover transition-all">
+                        <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-mug-hot text-blue-600"></i>
+                        </div>
+                        <h4 class="font-medium text-blue-900">Café grátis</h4>
+                        <p class="text-xs text-gray-600 mb-2">Cafeteria do Caminho</p>
+                        <button class="text-xs bg-yellow-500 text-white px-3 py-1 rounded-full">500 pts</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 text-center card-hover transition-all">
+                        <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-tshirt text-blue-600"></i>
+                        </div>
+                        <h4 class="font-medium text-blue-900">Camiseta</h4>
+                        <p class="text-xs text-gray-600 mb-2">Edição limitada</p>
+                        <button class="text-xs bg-yellow-500 text-white px-3 py-1 rounded-full">1,000 pts</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 text-center card-hover transition-all">
+                        <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-book text-blue-600"></i>
+                        </div>
+                        <h4 class="font-medium text-blue-900">Guia espiritual</h4>
+                        <p class="text-xs text-gray-600 mb-2">Livro digital</p>
+                        <button class="text-xs bg-yellow-500 text-white px-3 py-1 rounded-full">750 pts</button>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 text-center card-hover transition-all">
+                        <div class="w-16 h-16 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-2">
+                            <i class="fas fa-hotel text-blue-600"></i>
+                        </div>
+                        <h4 class="font-medium text-blue-900">Noite grátis</h4>
+                        <p class="text-xs text-gray-600 mb-2">Albergue premium</p>
+                        <button class="text-xs bg-yellow-500 text-white px-3 py-1 rounded-full">2,000 pts</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ranking Screen -->
+        <div id="ranking-screen" class="hidden">
+            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Ranking de Peregrinos</h2>
+                <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                    <i class="fas fa-trophy"></i>
+                </button>
+            </div>
+            
+            <div class="p-4">
+                <div class="bg-white rounded-lg shadow-md p-4 mb-4">
+                    <div class="flex items-center mb-3">
+                        <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center mr-3">
+                            <i class="fas fa-crown text-yellow-600"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-blue-900">Sua posição</h3>
+                            <p class="text-sm text-gray-600">#27 na classificação geral</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 65%"></div>
+                    </div>
+                </div>
+                
+                <h3 class="font-bold text-blue-900 mb-3">Top Peregrinos</h3>
+                <div class="space-y-3">
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-white font-bold mr-3">1</div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Ana Silva</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 95%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">4,750 pts</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-white font-bold mr-3">2</div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Carlos Mendes</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 88%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">4,400 pts</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-8 h-8 bg-amber-700 rounded-full flex items-center justify-center text-white font-bold mr-3">3</div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Maria Oliveira</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 82%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">4,100 pts</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-700 font-bold mr-3 border border-gray-300">4</div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">João Santos</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 76%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">3,800 pts</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-gray-700 font-bold mr-3 border border-gray-300">5</div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Luísa Fernandes</h4>
+                            <div class="flex items-center">
+                                <div class="w-full bg-gray-200 rounded-full h-2 mr-2">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 70%"></div>
+                                </div>
+                                <span class="text-xs text-gray-600">3,500 pts</span>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <button class="w-full mt-4 py-2 bg-blue-100 text-blue-900 rounded-lg font-medium">
+                    Ver classificação completa
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profile-screen" class="hidden">
+            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Meu Perfil</h2>
+                <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                    <i class="fas fa-cog"></i>
+                </button>
+            </div>
+            
+            <div class="p-4">
+                <div class="bg-white rounded-lg shadow-md p-6 text-center mb-6">
+                    <div class="w-24 h-24 mx-auto bg-blue-100 rounded-full flex items-center justify-center mb-4">
+                        <i class="fas fa-user text-blue-600 text-3xl"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-blue-900">João Peregrino</h3>
+                    <p class="text-gray-600">joao@peregrino.com</p>
+                    
+                    <div class="mt-4 flex justify-center space-x-2">
+                        <span class="bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">Nível 3</span>
+                        <span class="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">1,250 pts</span>
+                    </div>
+                </div>
+                
+                <div class="space-y-3 mb-6">
+                    <div class="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                                <i class="fas fa-route"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-blue-900">Meu Progresso</h4>
+                                <p class="text-xs text-gray-600">52 km caminhados</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                                <i class="fas fa-medal"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-blue-900">Minhas Conquistas</h4>
+                                <p class="text-xs text-gray-600">8 conquistas desbloqueadas</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-4 flex justify-between items-center">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-medium text-blue-900">Histórico</h4>
+                                <p class="text-xs text-gray-600">Ver minhas jornadas</p>
+                            </div>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-400"></i>
+                    </div>
+                </div>
+                
+                <button class="w-full py-2 bg-yellow-500 text-white rounded-lg font-medium mb-3">
+                    Editar Perfil
+                </button>
+                
+                <button class="w-full py-2 bg-white border border-gray-300 text-gray-700 rounded-lg font-medium">
+                    Sair
+                </button>
+            </div>
+        </div>
+
+        <!-- Interaction Screen -->
+        <div id="interaction-screen" class="hidden">
+            <div class="bg-blue-900 text-white p-4 flex justify-between items-center">
+                <h2 class="text-xl font-bold">Peregrinos Próximos</h2>
+                <button class="p-2 rounded-full bg-blue-800 hover:bg-blue-700">
+                    <i class="fas fa-users"></i>
+                </button>
+            </div>
+            
+            <div class="p-4">
+                <div class="relative mb-4">
+                    <input type="text" placeholder="Buscar peregrinos..." class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-yellow-500 focus:border-yellow-500">
+                    <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                </div>
+                
+                <div class="space-y-3">
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Ana Clara</h4>
+                            <p class="text-xs text-gray-600">0.8 km de distância • Nível 4</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Carlos Eduardo</h4>
+                            <p class="text-xs text-gray-600">1.2 km de distância • Nível 2</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Mariana Santos</h4>
+                            <p class="text-xs text-gray-600">1.5 km de distância • Nível 5</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Pedro Henrique</h4>
+                            <p class="text-xs text-gray-600">2.1 km de distância • Nível 3</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white rounded-lg shadow-md p-3 flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 mr-3">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-medium text-blue-900">Luíza Fernanda</h4>
+                            <p class="text-xs text-gray-600">2.8 km de distância • Nível 4</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button class="w-8 h-8 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                            <button class="w-8 h-8 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white shadow-lg border-t border-gray-200 flex justify-around items-center p-2 max-w-md mx-auto">
+            <button onclick="showScreen('map-screen')" class="p-2 rounded-full text-teal-900 flex flex-col items-center">
+                <i class="fas fa-map-marker-alt text-xl"></i>
+                <span class="text-xs mt-1">Mapa</span>
+            </button>
+            <button onclick="showScreen('news-screen')" class="p-2 rounded-full text-gray-500 flex flex-col items-center">
+                <i class="fas fa-newspaper text-xl"></i>
+                <span class="text-xs mt-1">Notícias</span>
+            </button>
+            <button onclick="showScreen('rewards-screen')" class="p-2 rounded-full text-gray-500 flex flex-col items-center">
+                <i class="fas fa-gift text-xl"></i>
+                <span class="text-xs mt-1">Recompensas</span>
+            </button>
+            <button onclick="showScreen('ranking-screen')" class="p-2 rounded-full text-gray-500 flex flex-col items-center">
+                <i class="fas fa-trophy text-xl"></i>
+                <span class="text-xs mt-1">Ranking</span>
+            </button>
+            <button onclick="showScreen('profile-screen')" class="p-2 rounded-full text-gray-500 flex flex-col items-center">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-xs mt-1">Perfil</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Hide splash screen after 3 seconds and show login screen
+        setTimeout(() => {
+            document.getElementById('splash-screen').classList.add('hidden');
+            document.getElementById('app-container').classList.remove('hidden');
+            showScreen('login-screen');
+        }, 3000);
+
+        // Function to show specific screen and hide others
+        function showScreen(screenId) {
+            // Hide all screens
+            const screens = ['login-screen', 'register-screen', 'map-screen', 'news-screen', 
+                            'rewards-screen', 'ranking-screen', 'profile-screen', 'interaction-screen'];
+            screens.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) element.classList.add('hidden');
+            });
+            
+            // Show the requested screen
+            const screenToShow = document.getElementById(screenId);
+            if (screenToShow) screenToShow.classList.remove('hidden');
+            
+            // Update bottom navigation active state
+            const navButtons = document.querySelectorAll('.fixed.bottom-0 button');
+            navButtons.forEach(button => {
+                button.classList.remove('text-blue-900');
+                button.classList.add('text-gray-500');
+            });
+            
+            // Set active state for current screen if it's in the bottom nav
+            switch(screenId) {
+                case 'map-screen':
+                    navButtons[0].classList.remove('text-gray-500');
+                    navButtons[0].classList.add('text-blue-900');
+                    break;
+                case 'news-screen':
+                    navButtons[1].classList.remove('text-gray-500');
+                    navButtons[1].classList.add('text-blue-900');
+                    break;
+                case 'rewards-screen':
+                    navButtons[2].classList.remove('text-gray-500');
+                    navButtons[2].classList.add('text-blue-900');
+                    break;
+                case 'ranking-screen':
+                    navButtons[3].classList.remove('text-gray-500');
+                    navButtons[3].classList.add('text-blue-900');
+                    break;
+                case 'profile-screen':
+                    navButtons[4].classList.remove('text-gray-500');
+                    navButtons[4].classList.add('text-blue-900');
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
